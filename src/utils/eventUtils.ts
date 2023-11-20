@@ -127,10 +127,8 @@ export function getSwapTxReceiptResult({
     if (addressEqual(parsed.fromAddress, walletAddress) && addressEqual(parsed.tokenAddress, tokenInAddress)) {
       if (!poolAddress) {
         amountIn = amountIn.add(new BN(parsed.amount!));
-        totalSwaps++;
       } else if (addressEqual(poolAddress, parsed.toAddress)) {
         amountIn = amountIn.add(new BN(parsed.amount!));
-        totalSwaps++;
       }
     }
     if (addressEqual(parsed.toAddress, walletAddress) && addressEqual(parsed.tokenAddress, tokenOutAddress)) {

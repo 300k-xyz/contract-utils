@@ -99,11 +99,9 @@ function getSwapTxReceiptResult({ network, walletAddress, tokenInAddress, tokenO
         if ((0, tokenUtils_1.addressEqual)(parsed.fromAddress, walletAddress) && (0, tokenUtils_1.addressEqual)(parsed.tokenAddress, tokenInAddress)) {
             if (!poolAddress) {
                 amountIn = amountIn.add(new bn_js_1.default(parsed.amount));
-                totalSwaps++;
             }
             else if ((0, tokenUtils_1.addressEqual)(poolAddress, parsed.toAddress)) {
                 amountIn = amountIn.add(new bn_js_1.default(parsed.amount));
-                totalSwaps++;
             }
         }
         if ((0, tokenUtils_1.addressEqual)(parsed.toAddress, walletAddress) && (0, tokenUtils_1.addressEqual)(parsed.tokenAddress, tokenOutAddress)) {
