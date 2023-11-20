@@ -10,7 +10,7 @@ var Network;
     Network["celo"] = "celo";
     Network["optimism"] = "optimism";
     Network["avalanche"] = "avalanche";
-})(Network = exports.Network || (exports.Network = {}));
+})(Network || (exports.Network = Network = {}));
 var ChainId;
 (function (ChainId) {
     ChainId[ChainId["MAINNET"] = 1] = "MAINNET";
@@ -30,7 +30,7 @@ var ChainId;
     ChainId[ChainId["GNOSIS"] = 100] = "GNOSIS";
     ChainId[ChainId["MOONBEAM"] = 1284] = "MOONBEAM";
     ChainId[ChainId["AVALANCHE"] = 43114] = "AVALANCHE";
-})(ChainId = exports.ChainId || (exports.ChainId = {}));
+})(ChainId || (exports.ChainId = ChainId = {}));
 function getChainIdFromNetwork(network) {
     switch (network) {
         case Network.ethereum:

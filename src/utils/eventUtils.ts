@@ -107,6 +107,7 @@ export function getSwapTxReceiptResult({
   walletAddress,
   tokenInAddress,
   tokenOutAddress,
+  poolAddress,
   logs,
 }: {
   logs: any[];
@@ -114,19 +115,33 @@ export function getSwapTxReceiptResult({
   tokenInAddress: string;
   tokenOutAddress: string;
   walletAddress: string;
+  poolAddress?: string; // if poolAddress present, force amount in sent to poolAddress
 }) {
-  let amountIn = '0';
-  let amountOut = '0';
+  let amountIn = new BN(0);
+  let amountOut = new BN(0);
+  let totalSwaps = 0;
   for (let log of logs) {
     const parsed = parseLog(network, log);
     if (!parsed) continue;
     if (parsed.name !== 'Transfer') continue;
     if (addressEqual(parsed.fromAddress, walletAddress) && addressEqual(parsed.tokenAddress, tokenInAddress)) {
-      amountIn = parsed.amount!;
+      if (!poolAddress) {
+        amountIn = amountIn.add(new BN(parsed.amount!));
+        totalSwaps++;
+      } else if (addressEqual(poolAddress, parsed.toAddress)) {
+        amountIn = amountIn.add(new BN(parsed.amount!));
+        totalSwaps++;
+      }
     }
     if (addressEqual(parsed.toAddress, walletAddress) && addressEqual(parsed.tokenAddress, tokenOutAddress)) {
-      amountOut = parsed.amount!;
+      if (!poolAddress) {
+        amountOut = amountOut.add(new BN(parsed.amount!));
+        totalSwaps++;
+      } else if (addressEqual(poolAddress, parsed.fromAddress)) {
+        amountOut = amountOut.add(new BN(parsed.amount!));
+        totalSwaps++;
+      }
     }
   }
-  return { amountIn, amountOut };
+  return { amountIn: amountIn.toString(), amountOut: amountOut.toString(), totalSwaps };
 }

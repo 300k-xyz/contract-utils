@@ -86,9 +86,10 @@ function parseEvent(network, event) {
     return parseLog(network, { topics: raw.topics, address: event.address, data: raw.data });
 }
 exports.parseEvent = parseEvent;
-function getSwapTxReceiptResult({ network, walletAddress, tokenInAddress, tokenOutAddress, logs, }) {
-    let amountIn = '0';
-    let amountOut = '0';
+function getSwapTxReceiptResult({ network, walletAddress, tokenInAddress, tokenOutAddress, poolAddress, logs, }) {
+    let amountIn = new bn_js_1.default(0);
+    let amountOut = new bn_js_1.default(0);
+    let totalSwaps = 0;
     for (let log of logs) {
         const parsed = parseLog(network, log);
         if (!parsed)
@@ -96,12 +97,26 @@ function getSwapTxReceiptResult({ network, walletAddress, tokenInAddress, tokenO
         if (parsed.name !== 'Transfer')
             continue;
         if ((0, tokenUtils_1.addressEqual)(parsed.fromAddress, walletAddress) && (0, tokenUtils_1.addressEqual)(parsed.tokenAddress, tokenInAddress)) {
-            amountIn = parsed.amount;
+            if (!poolAddress) {
+                amountIn = amountIn.add(new bn_js_1.default(parsed.amount));
+                totalSwaps++;
+            }
+            else if ((0, tokenUtils_1.addressEqual)(poolAddress, parsed.toAddress)) {
+                amountIn = amountIn.add(new bn_js_1.default(parsed.amount));
+                totalSwaps++;
+            }
         }
         if ((0, tokenUtils_1.addressEqual)(parsed.toAddress, walletAddress) && (0, tokenUtils_1.addressEqual)(parsed.tokenAddress, tokenOutAddress)) {
-            amountOut = parsed.amount;
+            if (!poolAddress) {
+                amountOut = amountOut.add(new bn_js_1.default(parsed.amount));
+                totalSwaps++;
+            }
+            else if ((0, tokenUtils_1.addressEqual)(poolAddress, parsed.fromAddress)) {
+                amountOut = amountOut.add(new bn_js_1.default(parsed.amount));
+                totalSwaps++;
+            }
         }
     }
-    return { amountIn, amountOut };
+    return { amountIn: amountIn.toString(), amountOut: amountOut.toString(), totalSwaps };
 }
 exports.getSwapTxReceiptResult = getSwapTxReceiptResult;

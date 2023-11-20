@@ -90,13 +90,15 @@ export declare function parseEvent(network: Network, event: GeneralEvent): {
     amountDecimal?: undefined;
     toAddress?: undefined;
 } | null | undefined;
-export declare function getSwapTxReceiptResult({ network, walletAddress, tokenInAddress, tokenOutAddress, logs, }: {
+export declare function getSwapTxReceiptResult({ network, walletAddress, tokenInAddress, tokenOutAddress, poolAddress, logs, }: {
     logs: any[];
     network: Network;
     tokenInAddress: string;
     tokenOutAddress: string;
     walletAddress: string;
+    poolAddress?: string;
 }): {
     amountIn: string;
     amountOut: string;
+    totalSwaps: number;
 };

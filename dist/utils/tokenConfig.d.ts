@@ -41,7 +41,7 @@ export declare class Token extends BaseCurrency {
      */
     constructor(chainId: number, address: string, decimals: number, symbol?: string, name?: string);
 }
-export declare type TokenConfigMap = Record<string, Token>;
+export type TokenConfigMap = Record<string, Token>;
 export declare function getAllTokenConfigs(network: Network): TokenConfigMap;
 export declare function getTokenInfo(network: Network, symbol: string): Token;
 export declare const tokenConfig: Record<Network, TokenConfigMap>;
